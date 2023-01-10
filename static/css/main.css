@@ -1,0 +1,99 @@
+/* меню страниц */
+.menu, table {
+    background-color: #f1f1f1;
+    box-shadow: 4px 5px 10px rgba(0, 0, 0, 0.4);
+    width: 100%;
+}
+
+/*Теперь уберем маркеры со списка и произведем выравнивание его элементов в одну
+линию*/
+
+.menu li {
+    display: inline-block;
+    vertical-align: top;
+    padding: 10px;
+    color: #6f6d6d;
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.menu a {
+    text-decoration: none; /* Убирает подчеркивание для ссылок */
+    color: #6f6d6d;
+}
+
+.menu li:hover, input:hover, option:hover {
+    background-color: #e3b862;
+    cursor: pointer;
+    color: #f8f8f8;
+}
+
+select:hover {
+    cursor: pointer;
+}
+
+.menu ul {
+    padding: 0px;
+}
+
+.active, input, select, option {
+    background-color: #f8cd77;
+    color: #f8f8f8;
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.active.right {
+    float: right;
+}
+
+.active a:visited{
+    color: #f8f8f8;
+}
+
+.menu  a:hover{
+    color: #f8f8f8;
+}
+
+.block {
+    padding: 10px 20px;
+}
+
+tr:first-child td {
+    background-color:#f8cd77;
+    color: #f8f8f8;
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+tr {
+    color: #000000;
+}
+
+tr:first-child th {
+    background-color:#f2d974;
+    color: #f8f8f8;
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+table, th, td {
+    border: solid #d6d4d4;
+    word-wrap: break-word;
+}
+
+table {
+    width: 100%;
+    table-layout:fixed;
+}
+
+#tabl {
+    float: right;
+    display: table;
+}
+
+#tabl input {
+    width: 100%;
+}
+
+.inline_block  {
+    display: inline-block;
+    vertical-align:top;
+    margin: 10px;
+}

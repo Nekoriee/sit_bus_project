@@ -1,0 +1,24 @@
+<html>
+<head>
+    <title>Автобусы - Вход</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/main.css">
+</head>
+<body>
+<form action={{url_for("login")}} method="post">
+    <label for="user_id">Логин:</label>
+    <input type="text" name="user_id" id="login">
+    <br>
+    <label for="user_password">Пароль:</label>
+    <input type="password" name="user_password" id="password">
+    <br>
+    <input type="submit" value="Войти">
+</form>
+{% if error %}
+<p>
+    Неверный логин или пароль!
+</p>
+{% endif %}
+<form action={{url_for("index")}}>
+    <input type="submit" value="Вернуться">
+</form>
+</body>

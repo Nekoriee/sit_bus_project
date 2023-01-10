@@ -1,0 +1,88 @@
+<html>
+<head>
+    <title>Автобусы</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/main.css">
+    {% macro generate_bustop_options(relation) %}
+        {% set n = len(relation) %}
+        <option value="0"
+        {% if bustop == 0 %}
+        selected
+        {% endif %}
+        >Все</option>
+        {% for i in range(n) %}
+        <option value={{relation.loc[i,"bustop_id"]}}
+        {% if bustop == relation.loc[i,"bustop_id"] %}
+        selected
+        {% endif %}
+        >{{relation.loc[i,"bustop_name"]}}</option>
+        {% endfor %}
+    {% endmacro %}
+
+    {% macro generate_route_options(relation) %}
+        {% set n = len(relation) %}
+        <option value="0"
+        {% if route == 0 %}
+        selected
+        {% endif %}
+        >Все</option>
+        {% for i in range(n) %}
+        <option value={{relation.loc[i,"route_id"]}}
+        {% if route == relation.loc[i,"route_id"] %}
+        selected
+        {% endif %}
+        >{{relation.loc[i,"route_name"]}}</option>
+        {% endfor %}
+    {% endmacro %}
+
+    {% macro generate_table(relation) %}
+    {% set n = len(relation) %}
+    <table>
+        <tr>
+            <td>Маршрут</td>
+            <td>Номер автобуса</td>
+            <td>Остановка</td>
+            <td>Время прибытия</td>
+        </tr>
+        {% for i in range(n) %}
+        <tr>
+            <td>{{relation.loc[i,"route_name"]}}</td>
+            <td>{{relation.loc[i,"bus_number"]}}</td>
+            <td>{{relation.loc[i,"bustop_name"]}}</td>
+            <td>{{relation.loc[i,"time_arrivetime"]}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endmacro %}
+</head>
+<body>
+<div class=menu>
+    <ul>
+        <li class="active left"><a href={{url_for("index")}}>Остановки</a></li>
+        {% if user != none and user != '' %}
+        <li class="active left"><a href={{url_for("index")}}>Рейсы</a></li>
+        {% endif %}
+        {% if user != none and user != '' %}
+        <li class="active right"><a href={{url_for("logout")}}>Выйти</a></li>
+        {% else %}
+        <li class="active right"><a href={{url_for("login")}}>Войти</a></li>
+        {% endif %}
+    </ul>
+</div>
+    <form method="get">
+        <label for="select_date">Дата:</label>
+        <input type="date" name="date" id="select_date" min="{{cur_date}}" value="{{date}}">
+        <br>
+        <label for="select_bustop">Остановка:</label>
+        <select name="bustop" id="select_bustop">
+            {{ generate_bustop_options(table_bustop) }}
+        </select>
+        <br>
+        <label for="select_route">Маршрут:</label>
+        <select name="route" id="select_route">
+            {{ generate_route_options(table_route) }}
+        </select>
+        <br>
+        <input type="submit" value="Выбрать">
+    </form>
+    {{ generate_table(table_time) }}
+</body>

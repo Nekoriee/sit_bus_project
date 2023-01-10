@@ -1,0 +1,90 @@
+<html>
+<head>
+    <title>Маршуруты</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+
+    {% macro generate_table(relation, relation_bus, relation_driver) %}
+    <table>
+        <tr>
+            <td>Маршрут</td>
+            <td>Номер автобуса</td>
+            <td>ФИО водителя</td>
+            <td>Время выезда</td>
+        </tr>
+        {% for i in range(n) %}
+        <form>
+        <input type="hidden" name="trip_id" value={{relation.loc[i,"trip_id"]}}>
+        <tr>
+            <td>
+                {{relation.loc[i,"route_name"]}}
+            </td>
+            <td>
+                <select name="busnumber" id="select_busnumber">
+                    {% for j in range(len(relation_bus)) %}
+                    <option value={{relation_bus.loc[j,"bus_id"]}}
+                            {% if relation_bus.loc[j,"bus_number"] == relation.loc[i,"bus_number"]  %}
+                            selected
+                            {% endif %}
+                    >{{relation_bus.loc[j,"bus_number"]}}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>
+                <select name="driver" id="select_driver">
+                    {% for j in range(len(relation_driver)) %}
+                    <option value={{relation_driver.loc[j,"driver_id"]}}
+                            {% if relation_driver.loc[j,"driver_name"] == relation.loc[i,"driver_name"]  %}
+                    selected
+                    {% endif %}
+                    >{{relation_driver.loc[j,"driver_name"]}}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>
+                <input type="time" min="04:00" max="21:00" required value="04:00">
+                <input type="submit">Выехать</input>
+            </td>
+        </tr>
+        </form>
+        {% endfor %}
+    </table>
+    {% endmacro %}
+</head>
+<body>
+<div class=menu>
+    <ul>
+        <li class="active left"><a href={{url_for("index")}}>Остановки</a></li>
+        <li class="active left"><a href={{url_for("routes")}}>Рейсы</a></li>
+        {% if user != none and user != '' %}
+        <li class="active right"><a href={{url_for("logout")}}>Выйти</a></li>
+        {% else %}
+        <li class="active right"><a href={{url_for("login")}}>Войти</a></li>
+    </ul>
+</div>
+<form action="{{url_for('routes')}}" method="get">
+    <label for="select_date">Дата:</label>
+    <input type="date" name="date" id="select_date" min="{{cur_date}}" value="{{date}}">
+    <br>
+    <input type="submit">Выбрать</input>
+</form>
+<form action="{{url_for('new_route')}}" method="get">
+    <input type="hidden" name="date" value="{{date}}">
+    <input type="submit"
+           {% if trip_today is none and trip_yesterday is not none %}
+           disabled
+           {% endif %}
+    >Добавить рейс</input>
+</form>
+<form action="{{url_for('routes')}}" method="get">
+    <input type="hidden" name="carry" value="1"></input>
+    <input type="hidden" name="date" value={{date}}></input>
+    <input type="submit"
+            {% if trip_yesterday is none or trip_today is not none %}
+            disabled
+            {% endif %}
+    >Перенести рейсы с предыдущего дня</input>
+</form>
+{% if trip_today is not none %}
+    generate_table(trip_today, table_)
+{% endif %}
+</body>
