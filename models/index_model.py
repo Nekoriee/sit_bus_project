@@ -37,7 +37,7 @@ def get_time(conn, datetime, bustop, route):
         AND bustop_route.route_id LIKE :route
         AND bustop_route.bustop_id LIKE :bustop
     ''', {"bustop" : bustop, "route" : route, "datetime" : datetime})
-    print(route)
+    conn.commit()
     df_time = pandas.read_sql(
     ''' 
         SELECT
@@ -54,5 +54,4 @@ def get_time(conn, datetime, bustop, route):
             JOIN bus on trip.bus_id = bus.bus_id
         ORDER BY route_name, bus_number, time_arrivetime
     ''', conn)
-    print(df_time)
     return df_time

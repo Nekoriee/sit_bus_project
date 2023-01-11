@@ -59,7 +59,7 @@
     <ul>
         <li class="active left"><a href={{url_for("index")}}>Остановки</a></li>
         {% if user != none and user != '' %}
-        <li class="active left"><a href={{url_for("index")}}>Рейсы</a></li>
+        <li class="active left"><a href={{url_for("routes")}}>Рейсы</a></li>
         {% endif %}
         {% if user != none and user != '' %}
         <li class="active right"><a href={{url_for("logout")}}>Выйти</a></li>
