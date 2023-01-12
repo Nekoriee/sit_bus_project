@@ -13,6 +13,22 @@ def get_driver(conn):
         SELECT * FROM driver 
     ''', conn)
 
+def get_route(conn):
+    return pandas.read_sql( 
+    ''' 
+        SELECT * FROM route 
+    ''', conn)
+
+def add_trip(conn, datetime, route_id):
+    cursor = conn.cursor()
+    cursor.execute(''' 
+    INSERT INTO trip (route_id, bus_id, driver_id, trip_timestart) VALUES
+        (:route_id, 1, 1, :datetime)
+    ''', {"datetime" : datetime, "route_id" : route_id})
+    conn.commit()
+    print("TRIP ADDED")
+    print(pandas.read_sql('SELECT * FROM trip', conn))
+
 def get_trip(conn, dat):
     df = pandas.read_sql(''' 
     SELECT
@@ -23,14 +39,14 @@ def get_trip(conn, dat):
             bus.bus_number,
             driver.driver_id,
             driver.driver_name,
-            trip.trip_timestart,
+            strftime('%H:%M', trip.trip_timestart) as trip_timestart,
             trip.trip_started
         FROM trip, route, bus, driver
         WHERE
             trip.bus_id = bus.bus_id
             AND trip.route_id = route.route_id
             AND trip.driver_id = driver.driver_id
-            AND date(trip_timestart) = date(:date)
+            AND date(trip.trip_timestart) = date(:date)
         ORDER BY route_name
 ''', conn, params={"date" : str(dat) + ' 12:00:00'})
     return df

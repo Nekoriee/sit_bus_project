@@ -3,11 +3,15 @@
     <title>Маршуруты</title>
     <link rel="stylesheet" type="text/css" href="../static/css/main.css">
 
-    {% macro generate_table(relation, relation_bus, relation_driver) %}
+    {% macro generate_table(relation, relation_bus, relation_driver, relation_route) %}
     {% set n = len(relation) %}
     {% for i in range(n) %}
     <form action="{{url_for('routes')}}" id=form_{{relation.loc[i,"trip_id"]}} method="post">
         <input type="hidden" name="trip_id" value={{relation.loc[i,"trip_id"]}}>
+        <input type="hidden" name="date" value="{{date}}">
+    </form>
+    <form action="{{url_for('routes')}}" id=form_add method="post">
+        <input type="hidden" name="add" value=1>
         <input type="hidden" name="date" value="{{date}}">
     </form>
     {% endfor %}
@@ -55,7 +59,7 @@
             </td>
             <td>
                 {% if relation.loc[i,"trip_started"] is none or relation.loc[i,"trip_started"] == 0 %}
-                <input form=form_{{relation.loc[i,"trip_id"]}} name="time" type="time" min="04:00" max="21:00" required value="04:00">
+                <input form=form_{{relation.loc[i,"trip_id"]}} name="time" type="time" min={{cur_time}} max={{max_time}} required value={{cur_time}}>
                 <input form=form_{{relation.loc[i,"trip_id"]}} type="submit" value="Выехать">
                 {% else %}
                 {{relation.loc[i,"trip_timestart"]}}
@@ -63,6 +67,18 @@
             </td>
         </tr>
         {% endfor %}
+        <tr>
+            <td>
+                <select form=form_add name="route_id" id="select_route_id">
+                    {% for j in range(len(relation_route)) %}
+                    <option value={{relation_route.loc[j,"route_id"]}}>{{relation_route.loc[j,"route_name"]}}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td colspan="3">
+                <input class="input_fullwidth" form=form_add type="submit" value="Добавить рейс">
+            </td>
+        </tr>
     </table>
     {% endmacro %}
 </head>
@@ -84,14 +100,6 @@
     <br>
     <input type="submit" value="Выбрать">
 </form>
-<form action="{{url_for('routes')}}" method="get">
-    <input type="hidden" name="date" value="{{date}}">
-    <input type="submit"
-           {% if (trip_today is not defined or len(trip_today) == 0) and trip_yesterday is defined and len(trip_yesterday) > 0 %}
-            disabled="disabled"
-            {% endif %}
-    value="Добавить рейс">
-</form>
 <form action="{{url_for('routes')}}" method="post">
     <input type="hidden" name="carry" value="1"></input>
     <input type="hidden" name="date" value="{{date}}">
@@ -101,6 +109,6 @@
     {% endif %}>
 </form>
 {% if trip_today is not none %}
-    {{ generate_table(trip_today, table_bus, table_driver) }}
+    {{ generate_table(trip_today, table_bus, table_driver, table_route) }}
 {% endif %}
 </body>

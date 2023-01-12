@@ -3,6 +3,7 @@ from flask import render_template, request, session
 
 from utils import get_db_connection
 from models.index_model import *
+from datetime import datetime
 
 @app.route('/', methods=['get']) 
 def index(): 
@@ -38,10 +39,15 @@ def index():
         session['route'] = str(route_id)
     else:
         session['route'] = str(0)
+
+    if session['date'] == session['cur_date']:
+        session['cur_time'] = str(datetime.now().strftime("%H:%M:%S"))
+    else:
+        session['cur_time'] = '00:00:00'
  
     df_bustop = get_bustop(conn)
     df_route = get_route(conn)
-    df_time = get_time(conn, session['date'] + ' ' + '04:00:00', session['bustop'], session['route']) 
+    df_time = get_time(conn, session['date'] + ' ' + session['cur_time'], session['bustop'], session['route'])
      
     # выводим страницу 
     html = render_template( 

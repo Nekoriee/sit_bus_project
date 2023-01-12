@@ -36,6 +36,7 @@ def get_time(conn, datetime, bustop, route):
         AND date(time_arrivetime) = date(:datetime)
         AND bustop_route.route_id LIKE :route
         AND bustop_route.bustop_id LIKE :bustop
+        AND trip.trip_started = 1
     ''', {"bustop" : bustop, "route" : route, "datetime" : datetime})
     conn.commit()
     df_time = pandas.read_sql(
@@ -44,7 +45,7 @@ def get_time(conn, datetime, bustop, route):
             route_name,
             bustop_name,
             bus_number,
-            time_arrivetime
+            strftime('%H:%M', time_arrivetime) as time_arrivetime
         FROM
             time
             JOIN trip on time.trip_id = trip.trip_id
